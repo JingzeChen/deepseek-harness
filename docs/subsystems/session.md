@@ -293,14 +293,22 @@ type SurfaceOp =
 
 `'append'` is the normal tail-append path. `replace` shadows surface entries from `start` through `end` inclusive (both must be valid surface seqs; `start === end` replaces a single entry) and inserts the new event in their place.
 
-### `SurfaceIntent` — the parameter to `session.append()`
+### `SessionEventIntent` and `SurfaceIntent` — parameters to `session.append()`
+
+```ts type-equiv
+/** Event-envelope metadata accepted by every {@link Session.append} call. */
+interface SessionEventIntent {
+  /** Mark a purely informational extension event safe for an unaware reader to skip. */
+  ignorable?: true
+}
+```
 
 ```ts type-equiv
 /**
  * Surface placement and cited source-event seqs for {@link Session.append}. Required on
  * message-producing events and forbidden on log-only events.
  */
-interface SurfaceIntent {
+interface SurfaceIntent extends SessionEventIntent {
   surfaceOp: SurfaceOp
   /**
    * Complete set of known source-event seqs. `assistant/message` may use a
@@ -448,14 +456,16 @@ declare class Session {
    *
    * @param type - The event type (key of {@link SessionEventMap}).
    * @param data - The event payload; must be JSON-serializable.
-   * @param opts - Surface metadata: `surfaceOp` controls how the event enters
-   *   the ordered surface; `sourceEventSeqs` lists the seq numbers of earlier
-   *   events this one derives from. REQUIRED for
+  * @param opts - Event-envelope metadata. `ignorable: true` marks a purely
+  *   informational event safe for an unaware reader to skip. On surface
+  *   events, `surfaceOp` controls how the event enters the ordered surface;
+  *   `sourceEventSeqs` lists the seq numbers of earlier events this one derives
+  *   from. Surface placement is REQUIRED for
    *   {@link SurfaceEventType} events (every message-producing event must
    *   declare how it joins the surface, the sole source of derived model
    *   history) and
-   *   rejected by the compiler for non-surface types like `turn/start` or
-   *   `assistant/chunk`.
+  *   rejected by the compiler for non-surface types like `turn/start` or
+  *   `assistant/chunk`; those events may carry only the ignorable marker.
    * @returns the logged event — its assigned `seq`/`time` plus the SNAPSHOT of
    *   `data` that entered the log, so reading `event.data` back sees the logged
    *   value, never the caller's still-mutable input.
@@ -476,7 +486,7 @@ declare class Session {
   append<T extends SessionEventType>(
     type: T,
     data: SessionEventMap[T],
-    ...opts: T extends SurfaceEventType ? [opts: SurfaceIntent] : []
+    ...opts: T extends SurfaceEventType ? [opts: SurfaceIntent] : [opts?: SessionEventIntent]
   ): SessionEvent<T>;
   /**
    * The {@link EpochHeader} in force after the log's last header event — the

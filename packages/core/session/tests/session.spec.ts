@@ -776,6 +776,33 @@ describe('Session', () => {
     expect((event.data.content[0] as { text: string }).text).toBe('original')
   })
 
+  it('writes an explicit ignorable marker while required events remain unmarked', () => {
+    const session = Session.create(SessionId('append-ignorable'))
+    const required = session.append('turn/start', { turn: 1 })
+    const ignorable = session.append('todo/write', { todos: [] }, { ignorable: true })
+    const surface = session.append('user/message', createUserMessage({
+      content: [{ type: 'text', text: 'hello' }], source: { kind: 'user' },
+    }), { surfaceOp: 'append', ignorable: true })
+
+    expect(required.ignorable).toBeUndefined()
+    expect(ignorable.ignorable).toBe(true)
+    expect(surface).toMatchObject({ surfaceOp: 'append', ignorable: true })
+    expect(session.events).toEqual([required, ignorable, surface])
+  })
+
+  it('rejects an invalid ignorable marker before appending', () => {
+    const session = Session.create(SessionId('append-invalid-ignorable'))
+    const appendRaw = session.append.bind(session) as unknown as (
+      type: SessionEventType,
+      data: unknown,
+      opts?: unknown,
+    ) => SessionEvent
+
+    expect(() => appendRaw('turn/start', { turn: 1 }, { ignorable: false }))
+      .toThrow(/invalid event envelope/)
+    expect(session.events).toEqual([])
+  })
+
   it('reads a nested append-data getter once and stores its first JSON value', () => {
     const session = Session.create(SessionId('append-nested-drift'))
     let reads = 0

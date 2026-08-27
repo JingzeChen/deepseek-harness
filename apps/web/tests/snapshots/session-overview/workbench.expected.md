@@ -1,0 +1,57 @@
+- dialog "DSH Beacon":
+  - banner:
+    - heading "DSH Beacon" [level=2]
+    - paragraph: Showing 1 of 1 Sessions
+    - button "Close DSH Beacon":
+      - img
+  - searchbox "Search Sessions"
+  - combobox "Attention state":
+    - option "All states" [selected]
+    - option "Needs your action"
+    - option "Goal blocked"
+    - option "Latest operation failed"
+    - option "Running"
+    - option "Background work"
+    - option "Goal complete"
+    - option "New results"
+    - option "Goal paused"
+    - option "Idle, completion unknown"
+  - checkbox "Pinned only"
+  - text: Pinned only
+  - table "DSH Beacon":
+    - row "Session Status / current focus Updated":
+      - columnheader "Session"
+      - columnheader "Status / current focus"
+      - columnheader "Updated"
+    - rowgroup:
+      - row "workspace Needs your action Deliver the Session context summary Just now" [selected]:
+        - cell "workspace":
+          - strong: workspace
+        - cell "Needs your action Deliver the Session context summary":
+          - img
+          - text: Needs your action Deliver the Session context summary
+        - cell "Just now"
+  - complementary "Current information":
+    - heading "workspace" [level=3]
+    - text: Needs you Recorded fact
+    - paragraph: Waiting for approval
+    - text: Task Agent-maintained
+    - paragraph: Deliver the Session context summary
+    - paragraph: Covers activity sequence 6
+    - group:
+      - strong: AI summary
+      - text: snapshot-provider / snapshot-brief-model
+      - img
+    - region "Needs your action":
+      - strong: Needs your action
+      - paragraph: Allow the DSH Beacon snapshot to inspect the Workspace
+      - button "Reject"
+      - button "Allow once"
+    - text: Bookmark
+    - textbox "Bookmark":
+      - /placeholder: Record what to inspect first when resuming
+    - button "Open Session":
+      - img
+      - text: Open Session
+    - button "More Session actions":
+      - img

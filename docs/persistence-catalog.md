@@ -90,7 +90,7 @@ export type SessionEvent<T extends SessionEventType = SessionEventType> = {
 }[T]
 ```
 
-Sources: [`packages/core/session/src/types.ts:340`](../packages/core/session/src/types.ts) · [`packages/core/session/src/types.ts:347`](../packages/core/session/src/types.ts) · [`packages/core/session/src/types.ts:376`](../packages/core/session/src/types.ts) · [`packages/core/session/src/types.ts:408`](../packages/core/session/src/types.ts)
+Sources: [`packages/core/session/src/types.ts:340`](../packages/core/session/src/types.ts) · [`packages/core/session/src/types.ts:347`](../packages/core/session/src/types.ts) · [`packages/core/session/src/types.ts:376`](../packages/core/session/src/types.ts) · [`packages/core/session/src/types.ts:414`](../packages/core/session/src/types.ts)
 
 ## Events
 
@@ -605,6 +605,39 @@ Types: [ScheduleChange](subsystems/schedule.md)
 Source: [`packages/schedule/schedule/src/types.ts:219`](../packages/schedule/schedule/src/types.ts)
 
 ### `session/*`
+
+<a id="sessionbrief--log-only"></a>
+
+#### `session/brief` — log-only
+
+```ts persistence-catalog
+/** Complete generated brief; log-only and safe for unaware readers to skip. */
+'session/brief': SessionBriefEventData
+```
+
+Source: [`packages/session/session-brief/src/index.ts:60`](../packages/session/session-brief/src/index.ts)
+
+<a id="sessionbrief-llm-request--log-only"></a>
+
+#### `session/brief-llm-request` — log-only
+
+```ts persistence-catalog
+/** Log-only pre-dispatch record of one generated-brief model request. */
+'session/brief-llm-request': SessionBriefLlmRequestEventData
+```
+
+Source: [`packages/session/session-brief-llm/src/index.ts:77`](../packages/session/session-brief-llm/src/index.ts)
+
+<a id="sessionbrief-llm-result--log-only"></a>
+
+#### `session/brief-llm-result` — log-only
+
+```ts persistence-catalog
+/** Log-only content-free result and token accounting for that request. */
+'session/brief-llm-result': SessionBriefLlmResultEventData
+```
+
+Source: [`packages/session/session-brief-llm/src/index.ts:79`](../packages/session/session-brief-llm/src/index.ts)
 
 <a id="sessionend-seed--log-only"></a>
 

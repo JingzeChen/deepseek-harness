@@ -406,6 +406,16 @@
         "tests/**/*.ts"
       ]
     },
+    "packages/session/session-brief-llm": {
+      "entry": [
+        "tests/**/*.spec.ts",
+        "tests/**/*.e2e.ts"
+      ],
+      "project": [
+        "src/**/*.ts",
+        "tests/**/*.ts"
+      ]
+    },
     "packages/context/agent-instructions": {
       "entry": [
         "tests/**/*.spec.ts",

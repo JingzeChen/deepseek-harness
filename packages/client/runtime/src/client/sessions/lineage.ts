@@ -4,7 +4,7 @@
 
 import type { SessionId, SessionSummary } from '@deepseek-ai/dsh-api-remotes/client'
 import type { SessionProjectionMap } from '@deepseek-ai/dsh-session-projection/types'
-import type { PendingInteractionStatus } from './pending.ts'
+import type { PendingInteractionRequest, PendingInteractionStatus } from './pending.ts'
 
 /** Host list summary enriched with the latest mux-projected durable title. */
 export interface TitledSessionSummary extends SessionSummary {
@@ -31,6 +31,8 @@ export interface SessionListEntry {
   projectionValues?: Readonly<Partial<SessionProjectionMap>>
   /** User interaction currently blocking this session, derived from live mux frames. */
   pendingInteraction?: PendingInteractionStatus
+  /** Current answerable request selected in the same order as the conversation composer. */
+  pendingInteractionRequest?: PendingInteractionRequest
   /** Finished running while not selected and not yet opened — the sidebar's green "done" reminder (clears on select or the next run). */
   completed: boolean
   /** Lineage indent depth: root = 0; the UI just multiplies by the indent width. */
@@ -42,13 +44,13 @@ export interface SessionListEntry {
  * follows the established input order; this projection never re-sorts a
  * hydrated list from mutable timestamps.
  * @param summaries - the host's session.list items.
- * @param pendingInteractions - current manager-owned interaction status by session.
+ * @param pendingInteractions - current manager-owned interaction request by session.
  * @param completed - sessions with a pending completion reminder (manager-owned live fact; absent = false).
  * @returns display rows in render order.
  */
 export function flattenLineage(
   summaries: readonly TitledSessionSummary[],
-  pendingInteractions?: ReadonlyMap<SessionId, PendingInteractionStatus>,
+  pendingInteractions?: ReadonlyMap<SessionId, PendingInteractionRequest>,
   completed?: ReadonlySet<SessionId>,
 ): SessionListEntry[] {
   const byId = new Map<SessionId, TitledSessionSummary>()
@@ -74,10 +76,15 @@ export function flattenLineage(
       return
     }
     visited.add(s.sessionId)
-    const pendingInteraction = pendingInteractions?.get(s.sessionId)
+    const pendingInteractionRequest = pendingInteractions?.get(s.sessionId)
     out.push({
       ...s,
-      ...(pendingInteraction === undefined ? {} : { pendingInteraction }),
+      ...(pendingInteractionRequest === undefined
+        ? {}
+        : {
+          pendingInteraction: pendingInteractionRequest.status,
+          pendingInteractionRequest,
+        }),
       completed: completed?.has(s.sessionId) ?? false,
       depth,
     })

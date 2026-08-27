@@ -921,6 +921,10 @@ describe('pending-interaction list status', () => {
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBeUndefined()
     manager.handleMuxEnvelope({ rpcId: 'ra' as never, payload: { type: 'approval/requested', sessionId: S1, approvalId: 'ap1' as never, toolName: 'rm' } })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBe('approval')
+    expect(manager.getListSnapshot().items[0]?.pendingInteractionRequest).toMatchObject({
+      kind: 'approval', key: 'a:ra', status: 'approval',
+      payload: { approvalId: 'ap1', toolName: 'rm' },
+    })
     // Mux-open replay of the same question (same approvalId) is idempotent.
     manager.handleMuxEnvelope({ rpcId: 'ra' as never, payload: { type: 'approval/requested', sessionId: S1, approvalId: 'ap1' as never, toolName: 'rm' } })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBe('approval')
@@ -936,6 +940,10 @@ describe('pending-interaction list status', () => {
       payload: { type: 'question/requested', sessionId: S1, questions: [{ id: 'name', question: 'Name?' }] },
     })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBe('question')
+    expect(manager.getListSnapshot().items[0]?.pendingInteractionRequest).toMatchObject({
+      kind: 'question', key: 'q:q1', status: 'question',
+      payload: { questions: [{ id: 'name', question: 'Name?' }] },
+    })
     manager.handleMuxEnvelope({ rpcId: 'qx' as never, payload: { type: 'question/resolved', sessionId: S1, questionRpcId: 'q1' as never, outcome: 'answered' } })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBeUndefined()
 
@@ -952,6 +960,9 @@ describe('pending-interaction list status', () => {
       },
     })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBe('plan-review')
+    expect(manager.getListSnapshot().items[0]?.pendingInteractionRequest).toMatchObject({
+      kind: 'question', key: 'q:q2', status: 'plan-review',
+    })
     manager.handleMuxEnvelope({ rpcId: 'qy' as never, payload: { type: 'question/resolved', sessionId: S1, questionRpcId: 'q2' as never, outcome: 'cancelled' } })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBeUndefined()
   })
@@ -987,8 +998,10 @@ describe('pending-interaction list status', () => {
       payload: { type: 'question/requested', sessionId: S1, questions: [{ id: 'name', question: 'Name?' }] },
     })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBe('question')
+    expect(manager.getListSnapshot().items[0]?.pendingInteractionRequest?.key).toBe('q:q1')
     manager.handleMuxEnvelope({ rpcId: 'qy' as never, payload: { type: 'question/resolved', sessionId: S1, questionRpcId: 'q1' as never, outcome: 'answered' } })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBe('approval')
+    expect(manager.getListSnapshot().items[0]?.pendingInteractionRequest?.key).toBe('a:r1')
     manager.handleMuxEnvelope({ rpcId: 'rx' as never, payload: { type: 'approval/resolved', sessionId: S1, approvalId: 'a1' as never, outcome: 'rejected' as never } })
     expect(manager.getListSnapshot().items[0]?.pendingInteraction).toBeUndefined()
 

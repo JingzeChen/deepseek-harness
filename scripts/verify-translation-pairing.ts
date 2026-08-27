@@ -245,8 +245,8 @@ for (const source of [...pairAnchors].sort()) {
     continue
   }
 
-  const sourceText = sourceContent.toString('utf8')
-  const zhText = zhContent.toString('utf8')
+  const sourceText = sourceContent.toString('utf8').replaceAll('\r\n', '\n')
+  const zhText = zhContent.toString('utf8').replaceAll('\r\n', '\n')
   const sourceSwitcherTargets = languageSwitcherTargets(source)
   const zhSwitcherTargets = languageSwitcherTargets(zh)
   for (const violation of [

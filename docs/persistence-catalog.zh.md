@@ -608,6 +608,39 @@ export type SessionEvent<T extends SessionEventType = SessionEventType> = {
 
 ### `session/*`
 
+<a id="sessionbrief--log-only"></a>
+
+#### `session/brief` — log-only
+
+```ts persistence-catalog
+/** Complete generated brief; log-only and safe for unaware readers to skip. */
+'session/brief': SessionBriefEventData
+```
+
+来源：[`packages/session/session-brief/src/index.ts:60`](../packages/session/session-brief/src/index.ts)
+
+<a id="sessionbrief-llm-request--log-only"></a>
+
+#### `session/brief-llm-request` — log-only
+
+```ts persistence-catalog
+/** Log-only pre-dispatch record of one generated-brief model request. */
+'session/brief-llm-request': SessionBriefLlmRequestEventData
+```
+
+来源：[`packages/session/session-brief-llm/src/index.ts:77`](../packages/session/session-brief-llm/src/index.ts)
+
+<a id="sessionbrief-llm-result--log-only"></a>
+
+#### `session/brief-llm-result` — log-only
+
+```ts persistence-catalog
+/** Log-only content-free result and token accounting for that request. */
+'session/brief-llm-result': SessionBriefLlmResultEventData
+```
+
+来源：[`packages/session/session-brief-llm/src/index.ts:79`](../packages/session/session-brief-llm/src/index.ts)
+
 <a id="sessionend-seed--log-only"></a>
 
 #### `session/end-seed` — log-only

@@ -1708,6 +1708,73 @@ export interface JsonRpcConfig {
 
 来源：[`packages/sdk/server/src/index.ts:29`](../packages/sdk/server/src/index.ts)
 
+<a id="deepseek-aidsh-session-activity"></a>
+
+## `@deepseek-ai/dsh-session-activity`
+
+需要：`sessionProjections`
+
+```ts config-catalog
+/** Deployment-owned projection bounds. */
+export interface Config {
+  /** Maximum unmatched calls included in the client value. */
+  maxOpenTools: number
+  /** Maximum UTF-8 bytes exposed from an error's provider-neutral code. */
+  maxErrorBytes: number
+}
+```
+
+来源：[`packages/session/session-activity/src/index.ts:13`](../packages/session/session-activity/src/index.ts)
+
+<a id="deepseek-aidsh-session-brief"></a>
+
+## `@deepseek-ai/dsh-session-brief`
+
+需要：`sessions`
+
+```ts config-catalog
+/** Required generation and accepted-value policy. */
+export interface Config {
+  /** Enabled automatic checkpoints; an empty array keeps generation manual. */
+  readonly automaticTriggers: SessionBriefAutomaticTrigger[]
+  /** Required meaningful-event advance after the previous accepted brief. */
+  readonly minMeaningfulEvents: number
+  /** Maximum UTF-8 bytes in one complete accepted brief. */
+  readonly maxBriefBytes: number
+  /** Maximum completed, blocker, and citation entries. */
+  readonly maxItemsPerField: number
+}
+
+/** Automatic generation checkpoints recognized by the coordinator. */
+export type SessionBriefAutomaticTrigger = 'turn-end' | 'goal-blocked' | 'turn-error'
+```
+
+来源：[`packages/session/session-brief/src/index.ts:36`](../packages/session/session-brief/src/index.ts)
+
+<a id="deepseek-aidsh-session-brief-llm"></a>
+
+## `@deepseek-ai/dsh-session-brief-llm`
+
+需要：`sessionBrief` · `sessions` · `llm`
+
+```ts config-catalog
+/** Required deployment policy for the model-backed brief provider. */
+export interface Config {
+  /** Maximum UTF-8 bytes in the exact JSON-framed user input. */
+  readonly maxInputBytes: number
+  /** Auxiliary generation output-token cap. */
+  readonly maxOutputTokens: number
+  /** End-to-end auxiliary request deadline in milliseconds. */
+  readonly timeoutMs: number
+  /** Optional explicit provider route; must be paired with `model`. */
+  readonly provider?: string
+  /** Optional explicit model id; must be paired with `provider`. */
+  readonly model?: string
+}
+```
+
+来源：[`packages/session/session-brief-llm/src/index.ts:87`](../packages/session/session-brief-llm/src/index.ts)
+
 <a id="deepseek-aidsh-session-persistence-jsonl"></a>
 
 ## `@deepseek-ai/dsh-session-persistence-jsonl`
@@ -3250,6 +3317,7 @@ export interface Config {
 - `@deepseek-ai/dsh-client-ui-plan`（[`packages/client/ui-plan/src/index.ts`](../packages/client/ui-plan/src/index.ts)）
 - `@deepseek-ai/dsh-client-ui-reference`（[`packages/client/ui-reference/src/index.ts`](../packages/client/ui-reference/src/index.ts)）
 - `@deepseek-ai/dsh-client-ui-renderer`（[`packages/client/ui-renderer/src/index.ts`](../packages/client/ui-renderer/src/index.ts)）
+- `@deepseek-ai/dsh-client-ui-session-overview`（[`packages/client/ui-session-overview/src/index.ts`](../packages/client/ui-session-overview/src/index.ts)）
 - `@deepseek-ai/dsh-client-ui-settings`（[`packages/client/ui-settings/src/index.ts`](../packages/client/ui-settings/src/index.ts)）
 - `@deepseek-ai/dsh-client-ui-settings-general`（[`packages/client/ui-settings-general/src/index.ts`](../packages/client/ui-settings-general/src/index.ts)）
 - `@deepseek-ai/dsh-client-ui-settings-models`（[`packages/client/ui-settings-models/src/index.ts`](../packages/client/ui-settings-models/src/index.ts)）
@@ -3267,6 +3335,7 @@ export interface Config {
 - `@deepseek-ai/dsh-command-compact` — 需要 `commands` · `compact`（[`packages/compaction/command-compact/src/index.ts`](../packages/compaction/command-compact/src/index.ts)）
 - `@deepseek-ai/dsh-command-feedback` — 需要 `commands`（[`packages/feedback/command-feedback/src/index.ts`](../packages/feedback/command-feedback/src/index.ts)）
 - `@deepseek-ai/dsh-command-goal` — 需要 `commands` · `goals`（[`packages/goal/command-goal/src/index.ts`](../packages/goal/command-goal/src/index.ts)）
+- `@deepseek-ai/dsh-command-session-brief` — 需要 `commands` · `sessionBrief`（[`packages/session/command-session-brief/src/index.ts`](../packages/session/command-session-brief/src/index.ts)）
 - `@deepseek-ai/dsh-commands`（[`packages/interaction/commands/src/index.ts`](../packages/interaction/commands/src/index.ts)）
 - `@deepseek-ai/dsh-cordis-client-runner`（[`packages/extensions/cordis-client-runner/src/index.ts`](../packages/extensions/cordis-client-runner/src/index.ts)）
 - `@deepseek-ai/dsh-fs-e2b` — 需要 `e2b`（[`packages/e2b/fs-e2b/src/index.ts`](../packages/e2b/fs-e2b/src/index.ts)）

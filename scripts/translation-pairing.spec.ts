@@ -490,6 +490,14 @@ describe('generated regions', () => {
   const BEGIN = '<!-- BEGIN GENERATED cordis-surface (gen-cordis-catalog.ts) — do not edit between markers -->'
   const END = '<!-- END GENERATED cordis-surface -->'
 
+  it('normalizes CRLF before partitioning generated regions', () => {
+    const doc = `# T\r\n\r\n${BEGIN}\r\ngenerated\r\n${END}\r\n`
+    expect(partitionGeneratedRegions(doc)).toEqual({
+      regions: [`${BEGIN}\ngenerated\n${END}`],
+      stripped: '# T\n\n',
+    })
+  })
+
   it('partitions marker-delimited regions from the hand-owned remainder', () => {
     const doc = `# T\n\nprose\n\n${BEGIN}\ninjected\n${END}\ntail\n`
     const { regions, stripped } = partitionGeneratedRegions(doc)

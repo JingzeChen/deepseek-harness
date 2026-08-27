@@ -134,6 +134,12 @@ describe('spliceRegion', () => {
       .toBe(`# T\n\nprose\n\n${REGION_BEGIN}\nnew\n${REGION_END}\ntail\n`)
   })
 
+  it('normalizes a Windows CRLF page before matching markers', () => {
+    const doc = `# T\r\n\r\n${REGION_BEGIN}\r\nold\r\n${REGION_END}\r\n`
+    expect(spliceRegion(doc, `${REGION_BEGIN}\nnew\n${REGION_END}`))
+      .toBe(`# T\n\n${REGION_BEGIN}\nnew\n${REGION_END}\n`)
+  })
+
   it('fails loud on a page carrying only some other generator\'s region', () => {
     // Another generator's markers satisfy the generic region grammar but must
     // never be overwritten by THIS generator's splice.

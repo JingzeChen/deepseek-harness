@@ -38,7 +38,7 @@ const GENERATED_REGION_MARKER_HINT = /^<!-- (?:BEGIN|END) GENERATED /
  *   marker line, or a closing slug that does not match its opener.
  */
 export function partitionGeneratedRegions(content: string): { regions: string[]; stripped: string } {
-  const lines = content.split('\n')
+  const lines = content.replaceAll('\r\n', '\n').split('\n')
   const regions: string[] = []
   const kept: string[] = []
   let open: { slug: string; lines: string[] } | null = null
@@ -322,7 +322,7 @@ export interface TranslationStructureSignature {
 
 /** Parse Markdown with the same GFM extensions used by the pairing gate. */
 export function parseTranslationMarkdown(content: string): Nodes {
-  return fromMarkdown(content, { extensions: [gfm()], mdastExtensions: [gfmFromMarkdown()] })
+  return fromMarkdown(content.replaceAll('\r\n', '\n'), { extensions: [gfm()], mdastExtensions: [gfmFromMarkdown()] })
 }
 
 const PUBLIC_REPOSITORY_BLOB_ROOT = 'https://github.com/deepseek-ai/deepseek-harness/blob/master/'

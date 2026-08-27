@@ -272,6 +272,15 @@ const SERVICE_ROLES: ServiceRole[] = [
     note: 'Owns the deterministic fallback, latest-title fold, and sole optional asynchronous provider registration.',
   },
   {
+    key: 'sessionBrief',
+    pkg: 'session-brief',
+    title: 'Bounded generated session briefs',
+    mode: 'seam',
+    implementations: ['session-brief-llm'],
+    consumers: ['command-session-brief'],
+    note: 'Owns provider registration, stable-revision generation, accepted brief projection, and automatic or explicit refresh coordination.',
+  },
+  {
     key: 'systemPrompt',
     pkg: 'system-prompt',
     title: 'System prompt assembly registry',

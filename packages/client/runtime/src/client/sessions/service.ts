@@ -34,7 +34,7 @@ import type { ConversationRuntime } from './conversation-assembler.ts'
 import { SessionManager } from './manager.ts'
 import type { SessionRemotes } from './remotes.ts'
 import type { SessionListPhase, SessionSearchResultItem, SubagentCatalogSnapshot } from './manager.ts'
-import type { PendingInteractionStatus } from './pending.ts'
+import type { PendingInteractionRequest, PendingInteractionStatus } from './pending.ts'
 import { SessionProvideChannel } from './provide.ts'
 import type { Session } from './session.ts'
 
@@ -58,6 +58,8 @@ export interface SessionSummary {
   running: boolean
   /** User interaction currently blocking this session (sidebar amber-dot state). */
   pendingInteraction?: PendingInteractionStatus
+  /** Current answerable interaction request, selected in composer precedence. */
+  pendingInteractionRequest?: PendingInteractionRequest
   /** Finished while not selected and not yet opened — the sidebar's green "done" reminder. Absent = false. */
   completed?: boolean
   /**
@@ -675,6 +677,9 @@ export class SessionRuntime implements ISessions {
         ...(entry.pendingInteraction === undefined
           ? {}
           : { pendingInteraction: entry.pendingInteraction }),
+        ...(entry.pendingInteractionRequest === undefined
+          ? {}
+          : { pendingInteractionRequest: entry.pendingInteractionRequest }),
         ...(entry.projectionValues === undefined
           ? {}
           : { projectionValues: entry.projectionValues }),

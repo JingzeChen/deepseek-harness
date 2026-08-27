@@ -90,6 +90,34 @@
     - id: session-stats
       name: '@deepseek-ai/dsh-session-stats'
 
+    # Bounded durable activity facts for Session list and overview consumers.
+    - id: session-activity
+      name: '@deepseek-ai/dsh-session-activity'
+      config:
+        maxOpenTools: 3
+        maxErrorBytes: 64
+
+    # Generate after stable user-relevant checkpoints. The service coalesces
+    # revisions, waits for Agent idle, and requires the configured meaningful
+    # event advance; manual refresh remains available in the Context view.
+    - id: session-brief
+      name: '@deepseek-ai/dsh-session-brief'
+      config:
+        automaticTriggers: [turn-end, goal-blocked, turn-error]
+        minMeaningfulEvents: 2
+        maxBriefBytes: 4096
+        maxItemsPerField: 8
+
+    - id: session-brief-llm
+      name: '@deepseek-ai/dsh-session-brief-llm'
+      config:
+        maxInputBytes: 32768
+        maxOutputTokens: 512
+        timeoutMs: 30000
+
+    - id: command-session-brief
+      name: '@deepseek-ai/dsh-command-session-brief'
+
     # Resolve bind host, SSH launch, and display once at boot, then mount the
     # matching dual-face directory picker. Mount -native or -browse directly in
     # an overlay to pin the interaction.
@@ -236,6 +264,10 @@
 
     - id: ui-workspace
       name: '@deepseek-ai/dsh-client-ui-workspace'
+
+    # Global attention-ordered Session workbench and sidebar footer trigger.
+    - id: ui-session-overview
+      name: '@deepseek-ai/dsh-client-ui-session-overview'
 
     # Input triggers: the '/' | '@' pipeline (ui-input-trigger), the command surface over
     # it (ui-commands), and the reference sources (ui-skill / ui-reference).

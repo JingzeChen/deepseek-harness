@@ -2,7 +2,7 @@
 
 [English](demand-discovery-agent-technical-design.md) | 中文
 
-> 文档状态：目标设计，讨论稿；文档版本：v0.2；更新日期：2026-08-21；对应需求：[需求发现 Agent 产品需求文档](demand-discovery-agent-prd.md)；实施范围：内部研究工作台与有监督的 L1 单次研究 Agent
+> 文档状态：目标设计，讨论稿；文档版本：v0.2；更新日期：2026-08-21；实施范围：内部研究工作台与有监督的 L1 单次研究 Agent
 
 本文描述如何基于 DeepSeek Harness 实现“需求雷达”的首个工程版本。它定义目标架构、组件职责、数据模型、运行状态机、Agent 与后台研究流水线的协作方式、Web 接入、可靠性和安全要求，以及分阶段实施路径。本文描述的是待实现设计，不代表这些需求研究包已经存在于当前仓库。
 
@@ -16,7 +16,7 @@
 
 “持续”不表示一个永不结束的 Agent turn。Research Agent 每次只运行一个受 token、时间和 action 数量限制的 activation；它提交 action 或等待条件后结束。领域中的 durable wake 记录在 action 完成、审批、定时条件或 Host 恢复后触发下一次 activation。浏览器关闭、live Agent 释放或 Host 重启都不应使研究记录消失。
 
-两个 Agent 的 [`Session`](subsystems/session.md) 分别保存用户对话和研究决策中已经模型可见的事实。研究项目、原始语料、action、脚本、结构化信号、机会卡、报告版本、wake 和执行检查点进入独立 Research Domain。Research Agent 通过分页工具读取领域产物并以类型化 action 修改它，不能绕过 Runner 直接改写权威记录。
+两个 Agent 的 [`Session`](subsystems/session.zh.md) 分别保存用户对话和研究决策中已经模型可见的事实。研究项目、原始语料、action、脚本、结构化信号、机会卡、报告版本、wake 和执行检查点进入独立 Research Domain。Research Agent 通过分页工具读取领域产物并以类型化 action 修改它，不能绕过 Runner 直接改写权威记录。
 
 ```mermaid
 flowchart LR
@@ -85,11 +85,11 @@ flowchart LR
 - 跨周无人监督监控和面向用户的主动通知；L1 的 Research Agent 只在一个已批准 Run 内持续工作。
 - 自动发帖、私信、投放、购买或其他外部写操作。
 - 向量数据库、复杂知识图谱、自由多 Agent 网络和不受约束的模型脚本。
-- 把现有 [`workflow`](subsystems/workflow.md) 或 [`jobs-local`](subsystems/jobs.md) 当作持久研究队列。
+- 把现有 [`workflow`](subsystems/workflow.zh.md) 或 [`jobs-local`](subsystems/jobs.zh.md) 当作持久研究队列。
 
 ## 3. Harness 能力映射
 
-本实现遵循 [Harness 架构](architecture.md) 的插件、Service、事件和可逆 effect 模型。业务包依赖能力定义，不依赖具体 Provider。
+本实现遵循 [Harness 架构](architecture.zh.md) 的插件、Service、事件和可逆 effect 模型。业务包依赖能力定义，不依赖具体 Provider。
 
 | 研究需求 | 复用的 Harness 能力 | 使用方式 |
 | --- | --- | --- |
@@ -177,7 +177,7 @@ flowchart TB
 
 Research Agent 使用独立 Session，但 L1 不把它伪装成普通 subagent：`SessionHeader.origin` 当前只接受 `subagent`，该标记会触发现有 subagent catalog 和冷会话授权语义。`ResearchAgentLink` 在 Research Domain 中关联 project、run、对话 Session 与研究 Session；Web 列表通过该关联隐藏内部 Session。Coordinator 直接通过 `ctx.agents.create/resume()` 挂载精确 preset，并在每次 activation 完全停稳后 flush 和 dispose。
 
-这种分配遵循 [Agent Preset](../packages/preset/agent-presets/README.md) 的作用域规则：Host 服务不能放进 preset 的 isolate realm；模型可见工具不能注册为所有 Session 共享的全局工具。需要一个或多个有明确 live parent 的辅助研究 Agent 时，Research Agent 仍可使用现有 continuable subagent，但它们不是持久 action 队列。
+这种分配遵循 [Agent Preset](../packages/preset/agent-presets/README.zh.md) 的作用域规则：Host 服务不能放进 preset 的 isolate realm；模型可见工具不能注册为所有 Session 共享的全局工具。需要一个或多个有明确 live parent 的辅助研究 Agent 时，Research Agent 仍可使用现有 continuable subagent，但它们不是持久 action 队列。
 
 ### 4.3 L1 部署拓扑
 
@@ -204,7 +204,7 @@ flowchart TB
   Scheduler --> Sources[Source Providers]
 ```
 
-SQLite 只由一个 Host 进程写入。`storage-domain` 当前没有跨表事务、二级索引和跨进程通知，[SQLite storage backend](../packages/storage/storage-sqlite/README.md) 也不提供多进程写入协调，因此不能通过启动多个 Host 扩容 L1。
+SQLite 只由一个 Host 进程写入。`storage-domain` 当前没有跨表事务、二级索引和跨进程通知，[SQLite storage backend](../packages/storage/storage-sqlite/README.zh.md) 也不提供多进程写入协调，因此不能通过启动多个 Host 扩容 L1。
 
 ### 4.4 L2 替换点
 
@@ -592,7 +592,7 @@ Agent Preset 当前持久化 preset ID，但不承诺在 Host 升级后恢复旧
 | `research_evidence_get` | 分页读取一个声明的支持或反对证据 | 每项包含最小上下文、来源和原始链接 |
 | `research_report_summary` | 读取已发布报告摘要和版本 | 不返回完整 HTML |
 
-工具 body 返回 schema 校验后的 JSON 值，`output.render` 只负责模型可见文本。UI 卡片通过纯 `presentCall`、`presentationMeta` 和 `presentResult` 投影实现，遵循 [Tool authoring reference](cookbook/adding-a-tool.md)。
+工具 body 返回 schema 校验后的 JSON 值，`output.render` 只负责模型可见文本。UI 卡片通过纯 `presentCall`、`presentationMeta` 和 `presentResult` 投影实现，遵循 [Tool authoring reference](cookbook/adding-a-tool.zh.md)。
 
 `research_plan_propose` 成功后调用执行上下文的 `concludeTurn()`，避免模型在用户尚未批准时继续假装执行研究。
 
@@ -1056,7 +1056,7 @@ ACTIVE -> DELETE_REQUESTED -> DELETING -> DELETED
 
 ## 20. 测试策略
 
-遵循仓库的 [Testing policy](testing.md)，只 mock LLM、网络、时钟和外部 blob medium 等昂贵或不确定边界，领域服务、Runner、工具和存储使用真实实现。
+遵循仓库的 [Testing policy](testing.zh.md)，只 mock LLM、网络、时钟和外部 blob medium 等昂贵或不确定边界，领域服务、Runner、工具和存储使用真实实现。
 
 ### 20.1 单元测试
 

@@ -1,6 +1,7 @@
 /** Strict per-session header/body content inserted into the resident conversation layout. */
 
 import { useEffect, useSyncExternalStore } from 'react'
+import type { MouseEvent } from 'react'
 import clsx from 'clsx'
 import type { SessionId, SessionListState, SessionSummary } from '@deepseek-ai/dsh-client-runtime/client'
 import type {
@@ -56,6 +57,14 @@ function equalBreadcrumbs(left: readonly Breadcrumb[], right: readonly Breadcrum
       const other = right.at(index)
       return other !== undefined && item.id === other.id && item.displayTitle === other.displayTitle
     })
+}
+
+/** Reset the resident scrollport before mounting a different conversation view. */
+function selectView(event: MouseEvent<HTMLButtonElement>, viewId: string, setView: (id: string) => void): void {
+  const root = event.currentTarget.closest('[data-phase]')
+  const scrollport = root?.querySelector<HTMLElement>('[data-conversation-scroll]')
+  if (scrollport !== undefined && scrollport !== null) scrollport.scrollTop = 0
+  setView(viewId)
 }
 
 /**
@@ -151,7 +160,7 @@ export function ConversationSessionHeader({
                   role="tab"
                   aria-selected={viewTab.id === active?.id}
                   className={clsx(css.tab, viewTab.id === active?.id && css.tabActive)}
-                  onClick={() => { actions.setView(viewTab.id) }}
+                  onClick={(event) => { selectView(event, viewTab.id, actions.setView) }}
                 >
                   {viewTab.label}
                 </button>

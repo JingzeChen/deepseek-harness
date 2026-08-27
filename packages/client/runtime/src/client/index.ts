@@ -98,7 +98,7 @@ export type {
 } from './sessions/request-inspection.ts'
 export { PendingWait } from './sessions/pending.ts'
 export type {
-  PendingInteraction, PendingInteractionStatus, PendingKind, PendingPayloads,
+  PendingInteraction, PendingInteractionRequest, PendingInteractionStatus, PendingKind, PendingPayloads,
 } from './sessions/pending.ts'
 // Projection value store (push model; see the session-projection subsystem
 // page, docs/subsystems/session-projection.md): host-computed

@@ -78,6 +78,7 @@ const SENTENCE_MODEL_EXPERIENCE: Readonly<Record<string, SentenceContract>> = {
   'packages/client/ui-workflow-run': { kind: 'none', reason: 'Browser-side UI plugin layer; renders durable workflow records without changing model context.' },
   'packages/client/ui-input-trigger': { kind: 'none', reason: 'Browser-side UI plugin layer; registers nothing model-facing.' },
   'packages/client/ui-reference': { kind: 'indirect', reason: 'Browser-side reference selection delegates file guidance and session snapshot preparation to Host-owned providers.' },
+  'packages/client/ui-session-overview': { kind: 'indirect', reason: 'Rendering is model-neutral; the Context refresh action delegates optional auxiliary generation to the Host /brief command and provider.' },
   'packages/client/ui-commands': { kind: 'indirect', reason: 'The dispatch paths trigger the host command.execute RPC; each command handler\'s host package owns any model-visible effect.' },
   'packages/client/ui-model-selection': { kind: 'indirect', reason: 'Selection routes session.selectModel; the Host snapshots the selection at the next prompt-assembly boundary and owns the model-visible effect.' },
   'packages/client/ui-goal': { kind: 'indirect', reason: 'The strip verbs route goal.* mutations; the host GoalService owns the model-visible goal/change context message.' },
@@ -124,6 +125,9 @@ const SENTENCE_MODEL_EXPERIENCE: Readonly<Record<string, SentenceContract>> = {
   'packages/sandbox/sandbox-windows-acl': { kind: 'indirect', reason: 'The provider backend delegates model rendering to the shell/pwsh sandbox executors and their tools.' },
   'packages/sdk/client': { kind: 'none', reason: 'Client-process library; model-facing behavior lives in the spawned runtime\'s composed plugins.' },
   'packages/sdk/protocol': { kind: 'none', reason: 'Client-facing wire library; the runtime plugins behind the serving entry own model-facing behavior.' },
+  'packages/session/session-activity': { kind: 'none', reason: 'The sessionActivity unit folds already-logged events into a client-facing read model and registers nothing model-facing.' },
+  'packages/session/session-brief': { kind: 'none', reason: 'The coordinator validates, logs, and projects provider output but does not assemble a model request itself.' },
+  'packages/session/command-session-brief': { kind: 'indirect', reason: 'The command delegates optional auxiliary generation to the registered sessionBrief provider.' },
   'packages/session/session-projection': { kind: 'none', reason: 'The projection registry serves client-facing read models of already-logged session state and registers nothing model-facing.' },
   'packages/session/session-projection-cache': { kind: 'none', reason: 'The persisted cache accelerates host-side cold reads of projection state and registers nothing model-facing.' },
   'packages/session/session-stats': { kind: 'none', reason: 'The sessionStats unit folds already-logged step boundaries into a client-facing read model and registers nothing model-facing.' },
@@ -292,7 +296,7 @@ for (const packageJson of packageJsons) {
     continue
   }
 
-  const text = readFileSync(abs, 'utf8')
+  const text = readFileSync(abs, 'utf8').replaceAll('\r\n', '\n')
   const rawLines = text.split('\n')
   const lines = markdownProseLines(text)
   const headings = markdownHeadingLines(text)

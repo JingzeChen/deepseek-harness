@@ -1177,6 +1177,31 @@ export const SERVICE_API: readonly ServiceApiEntry[] = [
     ],
   },
   {
+    key: 'sessionBrief',
+    summary: 'Log-backed generated brief coordinator.',
+    description: 'Log-backed generated brief coordinator.',
+    methods: [
+      {
+        signature: 'get(session: Session): SessionBriefEventData | undefined',
+        description: 'Read the latest accepted brief from a live or replayed Session.',
+        parameters: [{ name: 'session', description: 'Session whose log is authoritative.' }],
+        returns: 'latest complete brief, or `undefined` before acceptance.',
+      },
+      {
+        signature: 'register(provider: SessionBriefProvider): () => Promise<void>',
+        description: 'Register the sole optional brief provider.',
+        parameters: [{ name: 'provider', description: 'stable provider identity and generation function.' }],
+        returns: 'disposer that aborts and drains this registration\'s active calls.',
+      },
+      {
+        signature: 'async refresh(session: Session, signal?: AbortSignal): Promise<SessionBriefRefreshResult>',
+        description: 'Generate one brief from the current stable meaningful revision.',
+        parameters: [{ name: 'session', description: 'exact live Session to refresh.' }, { name: 'signal', description: 'optional caller cancellation.' }],
+        returns: 'typed acceptance, capability absence, busy, or failure outcome.',
+      },
+    ],
+  },
+  {
     key: 'sessionPersistence',
     summary: 'Durable append-only session storage.',
     description: 'Durable append-only session storage. Implementations preserve contiguous, losslessly JSON-serializable events; append resolves only after durability, and load balances a complete interrupted tail without rewriting committed events.',
@@ -3403,7 +3428,7 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   },
   {
     name: 'GenerateOptions',
-    declaration: 'export interface GenerateOptions {\n    provider: string;\n    model: string;\n    reasoningEffort?: ReasoningEffortId;\n    messages: Message[];\n    system?: string;\n    tools?: ToolSchema[];\n    temperature?: number;\n    maxTokens?: number;\n    stop?: string[];\n    signal?: AbortSignal;\n    sessionId?: Branded<\'SessionId\'>;\n    purpose?: \'compaction\' | \'session-title\';\n}',
+    declaration: 'export interface GenerateOptions {\n    provider: string;\n    model: string;\n    reasoningEffort?: ReasoningEffortId;\n    messages: Message[];\n    system?: string;\n    tools?: ToolSchema[];\n    temperature?: number;\n    maxTokens?: number;\n    stop?: string[];\n    signal?: AbortSignal;\n    sessionId?: Branded<\'SessionId\'>;\n    purpose?: \'compaction\' | \'session-title\' | \'session-brief\';\n}',
   },
   {
     name: 'GenericCallView',
@@ -4076,6 +4101,38 @@ export const TYPE_API: readonly TypeApiEntry[] = [
   {
     name: 'SessionAvailability',
     declaration: 'export type SessionAvailability = \'live\' | \'persisted\';',
+  },
+  {
+    name: 'SessionBriefEventData',
+    declaration: 'export interface SessionBriefEventData {\n    readonly version: 1;\n    readonly revision: number;\n    readonly sourceSeq: number;\n    readonly generatedAt: number;\n    readonly task: string;\n    readonly currentGoal?: string | undefined;\n    readonly currentFocus?: string | undefined;\n    readonly completed: string[];\n    readonly nextStep?: string | undefined;\n    readonly blockers: string[];\n    readonly waitingForUser?: string | undefined;\n    readonly provenance: SessionBriefProvenance;\n}',
+  },
+  {
+    name: 'SessionBriefModelProvenance',
+    declaration: 'export interface SessionBriefModelProvenance {\n    readonly provider: string;\n    readonly model: string;\n}',
+  },
+  {
+    name: 'SessionBriefProvenance',
+    declaration: 'export interface SessionBriefProvenance extends SessionBriefModelProvenance {\n    readonly sourceEventSeqs: number[];\n}',
+  },
+  {
+    name: 'SessionBriefProvider',
+    declaration: 'export interface SessionBriefProvider {\n    readonly id: SessionBriefProviderId;\n    generate(request: SessionBriefProviderRequest): Promise<SessionBriefProviderResult>;\n}',
+  },
+  {
+    name: 'SessionBriefProviderId',
+    declaration: 'export type SessionBriefProviderId = Branded<\'SessionBriefProviderId\'>;',
+  },
+  {
+    name: 'SessionBriefProviderRequest',
+    declaration: 'export interface SessionBriefProviderRequest {\n    readonly session: Session;\n    readonly header: SessionHeader;\n    readonly events: readonly SessionEvent[];\n    readonly sourceSeq: number;\n    readonly limits: {\n        readonly maxBriefBytes: number;\n        readonly maxItemsPerField: number;\n    };\n    readonly previous?: SessionBriefEventData | undefined;\n    readonly route?: SessionBriefModelProvenance | undefined;\n    readonly signal: AbortSignal;\n}',
+  },
+  {
+    name: 'SessionBriefProviderResult',
+    declaration: 'export interface SessionBriefProviderResult {\n    readonly task: string;\n    readonly currentGoal?: string | undefined;\n    readonly currentFocus?: string | undefined;\n    readonly completed: readonly string[];\n    readonly nextStep?: string | undefined;\n    readonly blockers: readonly string[];\n    readonly waitingForUser?: string | undefined;\n    readonly sourceEventSeqs: readonly number[];\n    readonly model: SessionBriefModelProvenance;\n}',
+  },
+  {
+    name: 'SessionBriefRefreshResult',
+    declaration: 'export type SessionBriefRefreshResult = {\n    readonly status: \'accepted\';\n    readonly brief: SessionBriefEventData;\n} | {\n    readonly status: \'unavailable\';\n    readonly reason: \'no-provider\' | \'no-meaningful-events\';\n} | {\n    readonly status: \'busy\';\n} | {\n    readonly status: \'failed\';\n    readonly reason: \'cancelled\' | \'stale\' | \'invalid-result\' | \'provider-failed\';\n    readonly code?: string | undefined;\n};',
   },
   {
     name: 'SessionEvent',

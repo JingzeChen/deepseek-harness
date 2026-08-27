@@ -18,6 +18,29 @@ export type PendingKind = keyof PendingPayloads
 /** Session-list summary of the user action currently blocking progress. */
 export type PendingInteractionStatus = 'approval' | 'plan-review' | 'question'
 
+/** JSON-compatible current interaction retained by the Session list object layer. */
+export type PendingInteractionRequest =
+  | {
+    /** Interaction domain. */
+    kind: 'approval'
+    /** Stable request identity used to reject stale decisions. */
+    key: string
+    /** List attention classification. */
+    status: 'approval'
+    /** Validated approval request fields. */
+    payload: PendingPayloads['approval']
+  }
+  | {
+    /** Interaction domain. */
+    kind: 'question'
+    /** Stable request identity used to reject stale answers. */
+    key: string
+    /** Generic question or renderable binary plan review. */
+    status: 'question' | 'plan-review'
+    /** Validated question request fields. */
+    payload: PendingPayloads['question']
+  }
+
 /** Kind-discriminated union of concrete waits: narrowing on `kind` types `payload`. */
 export type PendingInteraction = { [K in PendingKind]: PendingWait<K> }[PendingKind]
 

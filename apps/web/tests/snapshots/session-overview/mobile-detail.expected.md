@@ -1,0 +1,26 @@
+- dialog "DSH Beacon":
+  - banner:
+    - heading "DSH Beacon" [level=2]
+    - paragraph: Showing 1 of 1 Sessions
+    - button "Close DSH Beacon":
+      - img
+  - complementary "Current information":
+    - button "Back to Sessions":
+      - img
+      - text: Back to Sessions
+    - heading "workspace" [level=3]
+    - text: Task Agent-maintained
+    - paragraph: Deliver the Session context summary
+    - paragraph: Covers activity sequence 11
+    - group:
+      - strong: AI summary
+      - text: snapshot-provider / snapshot-brief-model
+      - img
+    - text: Bookmark
+    - textbox "Bookmark":
+      - /placeholder: Record what to inspect first when resuming
+    - button "Open Session":
+      - img
+      - text: Open Session
+    - button "More Session actions":
+      - img

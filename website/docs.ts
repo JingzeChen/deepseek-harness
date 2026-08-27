@@ -267,6 +267,7 @@ const subsystemGroups = [
     ['session-query.md', '会话查询', 'Session query'],
     ['session-reference.md', '会话引用', 'Session references'],
     ['session-title.md', '会话标题', 'Session titles'],
+    ['session-brief.md', '会话摘要', 'Session briefs'],
     ['session-projection.md', '会话投影', 'Session projections'],
     ['persistence.md', '会话持久化', 'Session persistence'],
     ['spill.md', 'Spill 存储', 'Spill storage'],

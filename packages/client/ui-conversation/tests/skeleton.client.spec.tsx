@@ -487,6 +487,18 @@ describe('ConversationRoot resident composer', () => {
     expect(b.view.getByRole('textbox')).toBeTruthy()
   })
 
+  it('resets the resident scrollport before switching conversation views', () => {
+    const b = mount(conversationSnapshot())
+    const scrollport = b.view.container.querySelector<HTMLElement>('[data-conversation-scroll]')
+    if (scrollport === null) throw new Error('expected resident conversation scrollport')
+    scrollport.scrollTop = 120
+
+    fireEvent.click(b.view.getByRole('tab', { name: 'Trajectory' }))
+
+    expect(scrollport.scrollTop).toBe(0)
+    expect(b.view.getByTestId('view-trajectory')).toBeTruthy()
+  })
+
   it('keeps the Chat fallback selected by id when a view is inserted before it', () => {
     const viewTabs: ViewTab[] = [
       { id: 'chat', label: 'Chat' },

@@ -2,7 +2,7 @@
 
 English | [中文](demand-discovery-agent-technical-design.zh.md)
 
-> Status: target design, draft; version: v0.2; updated: 2026-08-21; requirements: [Demand Discovery Agent Product Requirements](demand-discovery-agent-prd.md); implementation scope: internal research workbench and supervised L1 single-run research Agent
+> Status: target design, draft; version: v0.2; updated: 2026-08-21; implementation scope: internal research workbench and supervised L1 single-run research Agent
 
 This document describes how to implement the first engineering version of Demand Radar on DeepSeek Harness. It defines the target architecture, component responsibilities, data model, runtime state machine, collaboration among the Conversational Agent, Research Agent, and Research Runner, Web integration, reliability and security requirements, and staged implementation path. This is a target design; the demand-research packages described here do not yet exist in the repository.
 

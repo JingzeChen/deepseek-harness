@@ -480,6 +480,11 @@
     },
     {
       "doc": "docs/subsystems/session.md",
+      "symbol": "SessionEventIntent",
+      "source": "packages/core/session/src/types.ts"
+    },
+    {
+      "doc": "docs/subsystems/session.md",
       "symbol": "SurfaceIntent",
       "source": "packages/core/session/src/types.ts"
     },
@@ -629,6 +634,51 @@
       "doc": "docs/subsystems/session-title.md",
       "symbol": "SessionTitleProviderId",
       "source": "packages/session/session-title/src/index.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefModelProvenance",
+      "source": "packages/session/session-brief/src/types.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefProvenance",
+      "source": "packages/session/session-brief/src/types.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefEventData",
+      "source": "packages/session/session-brief/src/types.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefProviderRequest",
+      "source": "packages/session/session-brief/src/index.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefProviderResult",
+      "source": "packages/session/session-brief/src/index.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefProvider",
+      "source": "packages/session/session-brief/src/index.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefRefreshResult",
+      "source": "packages/session/session-brief/src/index.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefLlmRequestEventData",
+      "source": "packages/session/session-brief-llm/src/index.ts"
+    },
+    {
+      "doc": "docs/subsystems/session-brief.md",
+      "symbol": "SessionBriefLlmResultEventData",
+      "source": "packages/session/session-brief-llm/src/index.ts"
     },
     {
       "doc": "docs/subsystems/session-title.md",

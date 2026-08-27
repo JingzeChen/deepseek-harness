@@ -13,7 +13,7 @@ import { mergeOrderedBaseline } from '../ordered-baseline.ts'
 import type { ConversationRuntime } from './conversation-assembler.ts'
 import type { SessionListEntry, TitledSessionSummary } from './lineage.ts'
 import { flattenLineage } from './lineage.ts'
-import type { PendingInteractionStatus } from './pending.ts'
+import type { PendingInteractionRequest, PendingInteractionStatus } from './pending.ts'
 // Type-only merge edge: the title domain's client-namespace outlet declares
 // the 'title' projection key this manager projects into list rows (and any
 // useProjection('title') consumer reads). Zero value imports by construction.
@@ -91,7 +91,7 @@ function bufferedRequestKey(envelope: RpcRequest<MuxFrame>): string | undefined 
 /** Match ui-user-questions's binary plan-review routing at the wire boundary. */
 function questionInteractionStatus(
   questions: Extract<MuxFrame, { type: 'question/requested' }>['questions'],
-): PendingInteractionStatus {
+): Exclude<PendingInteractionStatus, 'approval'> {
   if (questions.length !== 1) return 'question'
   const question = questions[0] as typeof questions[number]
   const intent = question.intent
@@ -113,7 +113,7 @@ export class SessionManager {
    *  Manager-owned rather than read off Session instances because the sidebar must light up for
    *  sessions never instantiated. Cleared per connection generation — the reopen replay re-adds
    *  still-pending requests — and on session-removed. */
-  private readonly pendingInteractions = new Map<SessionId, Map<string, PendingInteractionStatus>>()
+  private readonly pendingInteractions = new Map<SessionId, Map<string, PendingInteractionRequest>>()
   /**
    * Sessions that finished running while not selected — the sidebar's green
    * "done" reminder (manager-owned, survives connection generations; cleared
@@ -653,14 +653,18 @@ export class SessionManager {
   }
 
   /** Add or refresh one stable pending-interaction identity. */
-  private trackPending(sessionId: SessionId, key: string, status: PendingInteractionStatus): void {
+  private trackPending(
+    sessionId: SessionId,
+    trackingKey: string,
+    request: PendingInteractionRequest,
+  ): void {
     let interactions = this.pendingInteractions.get(sessionId)
     if (interactions === undefined) {
       interactions = new Map()
       this.pendingInteractions.set(sessionId, interactions)
     }
-    if (interactions.get(key) === status) return
-    interactions.set(key, status)
+    if (interactions.has(trackingKey)) return
+    interactions.set(trackingKey, request)
     this.notifier.markDirty()
   }
 
@@ -736,15 +740,18 @@ export class SessionManager {
     // List-level pending-interaction status (the sidebar amber dot): tracked
     // for every session, instantiated or not; stable keys make replays idempotent.
     if (frame.type === 'approval/requested') {
-      this.trackPending(frame.sessionId, `a:${frame.approvalId}`, 'approval')
+      const { type: _type, sessionId, ...payload } = frame
+      this.trackPending(sessionId, `a:${frame.approvalId}`, {
+        kind: 'approval', key: `a:${envelope.rpcId}`, status: 'approval', payload,
+      })
     } else if (frame.type === 'approval/resolved') {
       this.resolvePending(frame.sessionId, `a:${frame.approvalId}`)
     } else if (frame.type === 'question/requested') {
-      this.trackPending(
-        frame.sessionId,
-        `q:${envelope.rpcId}`,
-        questionInteractionStatus(frame.questions),
-      )
+      const { type: _type, sessionId, ...payload } = frame
+      const key = `q:${envelope.rpcId}`
+      this.trackPending(sessionId, key, {
+        kind: 'question', key, status: questionInteractionStatus(frame.questions), payload,
+      })
     } else if (frame.type === 'question/resolved') {
       this.resolvePending(frame.sessionId, `q:${frame.questionRpcId}`)
     }
@@ -1030,13 +1037,13 @@ export class SessionManager {
         ...(projectionValues === undefined ? {} : { projectionValues }),
       }
     })
-    const pendingInteractions = new Map<SessionId, PendingInteractionStatus>()
+    const pendingInteractions = new Map<SessionId, PendingInteractionRequest>()
     for (const [sessionId, interactions] of this.pendingInteractions) {
-      const statuses = [...interactions.values()]
+      const requests = [...interactions.values()]
       // The composer selects the first question ahead of approval. Mirror that
       // answer order so the sidebar names the interaction the user can act on.
-      const status = statuses.find(candidate => candidate !== 'approval') ?? statuses[0]
-      if (status !== undefined) pendingInteractions.set(sessionId, status)
+      const request = requests.find(candidate => candidate.kind === 'question') ?? requests[0]
+      if (request !== undefined) pendingInteractions.set(sessionId, request)
     }
     const fresh = flattenLineage(merged, pendingInteractions, this.completedNotifications)
     const items = fresh.map((entry) => {
@@ -1047,6 +1054,7 @@ export class SessionManager {
         && prev.parentSessionId === entry.parentSessionId && prev.cwd === entry.cwd
         && prev.origin === entry.origin && prev.title === entry.title && prev.depth === entry.depth
         && prev.pendingInteraction === entry.pendingInteraction
+        && prev.pendingInteractionRequest === entry.pendingInteractionRequest
         && prev.projectionValues === entry.projectionValues
         && prev.completed === entry.completed
       ) return prev

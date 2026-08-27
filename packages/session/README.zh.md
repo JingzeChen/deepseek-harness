@@ -26,6 +26,17 @@
 | [`session-projection/`](session-projection/README.zh.md) | 定义并驱动会话投影单元 | `ctx.sessionProjections` |
 | [`session-projection-cache/`](session-projection-cache/README.zh.md) | 持久化并恢复投影检查点 | `ctx.sessionProjectionCache` |
 | [`session-stats/`](session-stats/README.zh.md) | 提供全日志会话计数与墙钟时间（`sessionStats` 单元） | 注册到 `ctx.sessionProjections` |
+| [`session-activity/`](session-activity/README.zh.md) | 提供有界确定性活动和未配对工具事实 | 注册到 `ctx.sessionProjections` |
+
+## 生成式摘要
+
+作为确定性会话事实旁边的可选结构化解释。
+
+| 包 | 职责 | ctx 键 |
+|---|---|---|
+| [`session-brief/`](session-brief/README.zh.md) | 负责 provider 注册、刷新、隔离、接纳值与投影 | `ctx.sessionBrief` |
+| [`session-brief-llm/`](session-brief-llm/README.zh.md) | 通过 LLM 运行时生成有界结构化摘要 | 注册到 `ctx.sessionBrief` |
+| [`command-session-brief/`](command-session-brief/README.zh.md) | 把显式刷新暴露为 `/brief` | 注册到 `ctx.commands` |
 
 ## 标题
 

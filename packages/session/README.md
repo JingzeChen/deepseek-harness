@@ -26,6 +26,17 @@ Serves current, log-derived per-session state to client carriers.
 | [`session-projection/`](session-projection/README.md) | Defines and drives session projection units | `ctx.sessionProjections` |
 | [`session-projection-cache/`](session-projection-cache/README.md) | Persists and restores projection checkpoints | `ctx.sessionProjectionCache` |
 | [`session-stats/`](session-stats/README.md) | Serves whole-log conversation counts and wall times (`sessionStats` unit) | registers on `ctx.sessionProjections` |
+| [`session-activity/`](session-activity/README.md) | Serves bounded deterministic activity and open-tool facts | registers on `ctx.sessionProjections` |
+
+## Generated briefs
+
+Optional structured interpretation beside deterministic Session facts.
+
+| Package | Role | ctx key |
+|---|---|---|
+| [`session-brief/`](session-brief/README.md) | Owns provider registration, refresh, fencing, accepted values, and projection | `ctx.sessionBrief` |
+| [`session-brief-llm/`](session-brief-llm/README.md) | Generates bounded structured briefs through the LLM runtime | registers on `ctx.sessionBrief` |
+| [`command-session-brief/`](command-session-brief/README.md) | Exposes explicit refresh as `/brief` | registers on `ctx.commands` |
 
 ## Titles
 

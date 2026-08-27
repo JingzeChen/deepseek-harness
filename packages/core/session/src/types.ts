@@ -377,11 +377,17 @@ export type SurfaceOp =
   | 'append'
   | { op: 'replace'; start: number; end: number }
 
+/** Event-envelope metadata accepted by every {@link Session.append} call. */
+export interface SessionEventIntent {
+  /** Mark a purely informational extension event safe for an unaware reader to skip. */
+  ignorable?: true
+}
+
 /**
  * Surface placement and cited source-event seqs for {@link Session.append}. Required on
  * message-producing events and forbidden on log-only events.
  */
-export interface SurfaceIntent {
+export interface SurfaceIntent extends SessionEventIntent {
   surfaceOp: SurfaceOp
   /**
    * Complete set of known source-event seqs. `assistant/message` may use a

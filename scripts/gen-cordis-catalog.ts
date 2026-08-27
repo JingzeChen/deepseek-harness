@@ -94,6 +94,7 @@ export const SERVICE_PAGE: Record<string, string> = {
   sessions: 'session.md',
   settings: 'settings.md',
   sessionTitle: 'session-title.md',
+  sessionBrief: 'session-brief.md',
   skills: 'skills.md',
   spillStore: 'spill.md',
   storage: 'storage.md',
@@ -399,6 +400,11 @@ export const LINK_MAP: Readonly<Record<string, string>> = {
   SessionTitleObservationResult: 'session-query.md',
   SessionTitleProvider: 'session-title.md',
   SessionTitleSnapshot: 'session-title.md',
+  SessionBriefProvider: 'session-brief.md',
+  SessionBriefEventData: 'session-brief.md',
+  SessionBriefProviderRequest: 'session-brief.md',
+  SessionBriefProviderResult: 'session-brief.md',
+  SessionBriefRefreshResult: 'session-brief.md',
   SkillCatalogSnapshot: 'skills.md',
   SkillDefinition: 'skills.md',
   SkillLookupOptions: 'skills.md',
@@ -711,7 +717,7 @@ export const CORDIS_CATALOG_POLICY: CordisCatalogPolicy = {
  * @returns the page text with the region replaced.
  */
 export function spliceRegion(content: string, region: string): string {
-  const lines = content.split('\n')
+  const lines = content.replaceAll('\r\n', '\n').split('\n')
   const begins = lines.flatMap((line, index) => (line === REGION_BEGIN ? [index] : []))
   const ends = lines.flatMap((line, index) => (line === REGION_END ? [index] : []))
   if (begins.length !== 1 || ends.length !== 1) {

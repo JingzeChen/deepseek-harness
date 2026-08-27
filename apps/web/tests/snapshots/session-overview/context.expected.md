@@ -1,0 +1,36 @@
+- region "Session context":
+  - text: Session context
+  - heading "workspace" [level=2]
+  - text: New results
+  - button "Refresh generated interpretation":
+    - img
+  - text: "Workspace: workspace Todo 1/3"
+  - main:
+    - text: Task Agent-maintained
+    - paragraph: Deliver the Session context summary
+    - text: Current focus Agent-maintained
+    - paragraph: Render the current context
+    - group:
+      - text: Completed Agent-maintained
+      - img
+      - list:
+        - listitem: Derive deterministic context facts
+    - text: Next Agent-maintained
+    - paragraph: Inspect responsive context layout
+    - paragraph: Covers activity sequence 6
+    - group:
+      - strong: AI summary
+      - text: snapshot-provider / snapshot-brief-model
+      - img
+      - text: Task
+      - paragraph: Deliver DSH Beacon with generated interpretation
+      - text: Current goal
+      - paragraph: Make Session catch-up fast and grounded
+      - text: Current focus
+      - paragraph: Validate the assembled generated brief UI
+      - text: Completed
+      - list:
+        - listitem: Implemented the bounded brief service
+      - text: Next
+      - paragraph: Inspect the refreshed browser evidence
+      - paragraph: Covers activity sequence 6

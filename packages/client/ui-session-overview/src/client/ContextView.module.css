@@ -1,0 +1,117 @@
+.root {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+  background: var(--dsw-alias-bg-layer-1);
+}
+
+.content {
+  width: min(760px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 28px 0 calc(var(--dsh-composer-height, 152px) + 32px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--dsw-alias-border-l2);
+}
+
+.refresh {
+  display: inline-grid;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  place-items: center;
+  color: var(--dsw-alias-label-secondary);
+  background: transparent;
+  border: 1px solid var(--dsw-alias-border-l1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.refresh:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.refreshError {
+  margin: 0;
+  color: var(--dsw-alias-negative);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.refreshNotice {
+  margin: 0;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.eyebrow {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.header h2 {
+  margin: 3px 0 0;
+  color: var(--dsw-alias-label-primary);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  overflow-wrap: anywhere;
+}
+
+.status {
+  flex: none;
+  margin-top: 4px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.status[data-attention='needs-action'],
+.status[data-attention='blocked'] { color: var(--dsw-alias-state-warn-label); }
+.status[data-attention='failed'] { color: var(--dsw-alias-state-error-primary); }
+.status[data-attention='running'] { color: var(--dsw-alias-state-business-primary); }
+.status[data-attention='goal-complete'] { color: var(--dsw-alias-state-success-primary); }
+
+.meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 12px 0 18px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.summary {
+  padding-top: 4px;
+}
+
+.unavailable {
+  margin: 40px auto;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .content {
+    width: calc(100% - 28px);
+    padding-top: 20px;
+  }
+
+  .header h2 {
+    font-size: 17px;
+    line-height: 24px;
+  }
+}

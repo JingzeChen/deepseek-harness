@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write docs/demand-discovery-agent-technical-design.md
-demand-discovery-agent-technical-design.md: 72eb5975053eaedc828d583e92b2d50ce96aec13
-demand-discovery-agent-technical-design.zh.md: 8e39ebada54a891710222f743186b4fa1dbdd9c3
+demand-discovery-agent-technical-design.md: 257a0ea397514c09bbc22c7c7c4d2865e740ea99
+demand-discovery-agent-technical-design.zh.md: 266339b6d201505f6b7d29df3f9171272b95e53d

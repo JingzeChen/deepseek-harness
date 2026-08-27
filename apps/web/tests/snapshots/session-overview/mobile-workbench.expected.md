@@ -1,0 +1,18 @@
+- dialog "DSH Beacon":
+  - banner:
+    - heading "DSH Beacon" [level=2]
+    - paragraph: Showing 1 of 1 Sessions
+    - button "Close DSH Beacon":
+      - img
+  - searchbox "Search Sessions"
+  - button "Filter":
+    - img
+    - text: Filter
+  - table "DSH Beacon":
+    - rowgroup:
+      - row "workspace New results Deliver the Session context summary" [selected]:
+        - cell "workspace":
+          - strong: workspace
+        - cell "New results Deliver the Session context summary":
+          - img
+          - text: New results Deliver the Session context summary

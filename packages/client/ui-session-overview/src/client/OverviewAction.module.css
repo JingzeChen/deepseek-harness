@@ -1,0 +1,56 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dsw-alias-label-primary);
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.trigger:hover { background: var(--dsw-alias-interactive-bg-hover); }
+
+.trigger:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: 2px;
+}
+
+.trigger[data-wide='false'] {
+  width: 36px;
+  padding: 0;
+}
+
+.badge {
+  display: inline-grid;
+  min-width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  place-items: center;
+  border-radius: 9px;
+  padding: 0 5px;
+  background: var(--dsw-alias-state-warn-primary);
+  color: var(--dsw-alias-label-primary-foreground);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.trigger[data-wide='false'] .badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  font-size: 9px;
+  line-height: 14px;
+}
+
+.trigger[data-wide='false'] { position: relative; }
